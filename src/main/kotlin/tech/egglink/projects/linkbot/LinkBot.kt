@@ -1,0 +1,114 @@
+package tech.egglink.projects.linkbot
+
+import kotlinx.coroutines.runBlocking
+import org.jline.reader.EndOfFileException
+import org.jline.reader.LineReader
+import org.jline.reader.LineReaderBuilder
+import org.jline.reader.UserInterruptException
+import org.jline.terminal.Terminal
+import org.jline.terminal.TerminalBuilder
+import tech.egglink.projects.linkbot.command.CommandResult
+import tech.egglink.projects.linkbot.command.ConsoleCommandSender
+import tech.egglink.projects.linkbot.utils.Utils
+import tech.egglink.projects.linkbot.utils.Utils.cmd
+import tech.egglink.projects.linkbot.utils.Utils.logger
+
+object LinkBot {
+    /**
+     * 程序入口类
+     * @param arg 命令行参数
+     * */
+    @JvmStatic
+    fun main(arg: Array<String>) {
+        logger.info(Utils.message.other.startInfo)
+        var isLastInterrupted = false
+        // TODO: 2023/2/12 加载数据库 . 读取插件
+        logger.info(Utils.message.other.loadingConfig)
+        Utils.config.loadConfig()  // 加载配置文件
+        logger.info(Utils.message.other.loadingBot)
+        Utils.bot.login(Utils.config.botAccount, Utils.config.botPassword)  // 登录机器人
+        logger.info(Utils.message.other.loadingCommand)
+        cmd.registerCommands()  // 注册所有命令
+        var terminal: Terminal? = null  // 终端
+        try {
+            terminal = TerminalBuilder.builder().jna(true).build()
+        } catch (e: Exception) {
+            try {
+                terminal = TerminalBuilder.builder().dumb(true).build()
+            } catch (ignored: Exception) {
+            }
+        }
+        logger.info(Utils.message.other.startSuccess)  // 启动成功
+
+        val reader: LineReader = LineReaderBuilder.builder().terminal(terminal).build()
+        // 主线程
+        while (true) {
+            try {
+                reader.readLine("> ").let { s ->
+                    val args = s.split(" ")
+                    if (args.size > 1) {
+                        val name = args[0]
+                        var argCmd = arrayOf<String>()
+                        args.forEach {
+                            if (it != name) {
+                                argCmd = argCmd.plus(it)
+                            }
+                        }
+                        runBlocking {
+                            when (cmd.runCommand(name, ConsoleCommandSender(), argCmd)) {
+                                CommandResult.NOT_FOUND -> logger.error(Utils.message.error.unknownCommand)
+                                CommandResult.NO_PERMISSION -> logger.error(Utils.message.error.noPermission)
+                                CommandResult.SUCCESS -> {
+                                    // 成功
+                                }
+
+                                CommandResult.ERROR -> logger.error(Utils.message.error.unknownError)
+                                CommandResult.INVALID_USAGE -> logger.error(Utils.message.error.invalidArgs)
+                                CommandResult.FAILURE -> {
+                                    // 失败
+                                }
+                            }
+                        }
+                    } else {
+                        val name = args[0]
+                        runBlocking {
+                            when (cmd.runCommand(name, ConsoleCommandSender(), arrayOf())) {
+                                CommandResult.NOT_FOUND -> logger.error(Utils.message.error.unknownCommand)
+                                CommandResult.NO_PERMISSION -> logger.error(Utils.message.error.noPermission)
+                                CommandResult.SUCCESS -> {
+                                    // 成功
+                                }
+
+                                CommandResult.ERROR -> logger.error(Utils.message.error.unknownError)
+                                CommandResult.INVALID_USAGE -> logger.error(Utils.message.error.invalidArgs)
+                                CommandResult.FAILURE -> {
+                                    // 失败
+                                }
+                            }
+                        }
+                    }
+                }
+                isLastInterrupted = false
+            } catch (e: UserInterruptException) {
+                if (!isLastInterrupted) {
+                    isLastInterrupted = true
+                    logger.warn(Utils.message.other.interrupted)
+                    continue
+                } else {
+                    Runtime.getRuntime().exit(0)
+                }
+            } catch (e: EndOfFileException) {
+                if (!isLastInterrupted) {
+                    isLastInterrupted = true
+                    logger.warn(Utils.message.other.interrupted)
+                    continue
+                } else {
+                    Runtime.getRuntime().exit(0)
+                }
+            } catch (e: Exception) {
+                logger.error(Utils.message.error.unknownError)
+                e.printStackTrace()
+            }
+        }
+    }
+}

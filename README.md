@@ -1,0 +1,3 @@
+# LinkBot
+Link由 Mirai驱动  
+...

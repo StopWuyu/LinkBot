@@ -12,24 +12,44 @@ import tech.egglink.projects.linkbot.command.ConsoleCommandSender
 import tech.egglink.projects.linkbot.utils.Utils
 import tech.egglink.projects.linkbot.utils.Utils.cmd
 import tech.egglink.projects.linkbot.utils.Utils.logger
+import java.io.File
 
 object LinkBot {
+    /**
+     * 设置关闭钩子
+     * */
+    private fun setShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(
+            Thread {
+                logger.info(Utils.message.other.exit)
+            }
+        )
+    }
+
     /**
      * 程序入口类
      * @param arg 命令行参数
      * */
     @JvmStatic
     fun main(arg: Array<String>) {
+        setShutdownHook()
         logger.info(Utils.message.other.startInfo)
         var isLastInterrupted = false
-        // TODO: 2023/2/12 加载数据库 . 读取插件
+        // TODO: 2023/2/12 读取插件
+        Utils.config.loadConfig() // 加载配置文件
+        // 创建parent目录
+        File(Utils.config.path.data).mkdirs()
+        File(Utils.config.path.plugins).mkdirs()
         logger.info(Utils.message.other.loadingConfig)
-        Utils.config.loadConfig()  // 加载配置文件
-        logger.info(Utils.message.other.loadingBot)
-        Utils.bot.login(Utils.config.botAccount, Utils.config.botPassword)  // 登录机器人
+        logger.info(Utils.message.other.loadingDatabase)
+        Utils.database.loadDatabase() // 加载数据库
+        if (Utils.config.bot.autoLogin) {
+            logger.info(Utils.message.other.loadingBot)
+            Utils.bot.login(Utils.config.account.id, Utils.config.account.password) // 登录机器人
+        }
         logger.info(Utils.message.other.loadingCommand)
-        cmd.registerCommands()  // 注册所有命令
-        var terminal: Terminal? = null  // 终端
+        cmd.registerCommands() // 注册所有命令
+        var terminal: Terminal? = null // 终端
         try {
             terminal = TerminalBuilder.builder().jna(true).build()
         } catch (e: Exception) {
@@ -38,7 +58,7 @@ object LinkBot {
             } catch (ignored: Exception) {
             }
         }
-        logger.info(Utils.message.other.startSuccess)  // 启动成功
+        logger.info(Utils.message.other.startSuccess) // 启动成功
 
         val reader: LineReader = LineReaderBuilder.builder().terminal(terminal).build()
         // 主线程

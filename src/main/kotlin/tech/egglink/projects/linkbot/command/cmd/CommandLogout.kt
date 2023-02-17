@@ -15,11 +15,13 @@ import tech.egglink.projects.linkbot.utils.Utils
  *
  * 参数: 无
  * */
-class CommandLogout: CommandHandler(Entry().apply {
-    name = "logout"
-    usage = Utils.message.command.logoutUsage
-    description = Utils.message.command.logoutDescription
-}) {
+class CommandLogout : CommandHandler(
+    Entry().apply {
+        name = "logout"
+        usage = Utils.message.command.logoutUsage
+        description = Utils.message.command.logoutDescription
+    }
+) {
     override suspend fun execute(sender: CommandSender, args: Array<String>): CommandResult {
         try {
             Utils.bot.logout()

@@ -16,13 +16,15 @@ import kotlin.system.exitProcess
  *
  * 参数: 无
  * */
-class CommandExit: CommandHandler(Entry().apply {
-    name = "exit"
-    description = Utils.message.command.exitDescription
-    usage = Utils.message.command.exitUsage
-    aliases = arrayOf("quit")
-    argsType = listOf()
-}) {
+class CommandExit : CommandHandler(
+    Entry().apply {
+        name = "exit"
+        description = Utils.message.command.exitDescription
+        usage = Utils.message.command.exitUsage
+        aliases = arrayOf("quit")
+        argsType = listOf()
+    }
+) {
     override suspend fun execute(sender: CommandSender, args: Array<String>): CommandResult {
         exitProcess(0)
     }

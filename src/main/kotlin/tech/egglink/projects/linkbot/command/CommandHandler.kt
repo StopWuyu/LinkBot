@@ -7,6 +7,7 @@ abstract class CommandHandler(val entry: Entry) {
         var usage: String = ""
         var aliases: Array<String> = arrayOf()
         var type: CommandType = CommandType.Console
+
         /**
          * 参数类型
          *

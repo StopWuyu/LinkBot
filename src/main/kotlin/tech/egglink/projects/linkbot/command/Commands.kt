@@ -1,9 +1,13 @@
 package tech.egglink.projects.linkbot.command
 
-import tech.egglink.projects.linkbot.command.cmd.*
+import tech.egglink.projects.linkbot.command.cmd.CommandExit
+import tech.egglink.projects.linkbot.command.cmd.CommandHelp
+import tech.egglink.projects.linkbot.command.cmd.CommandLogin
+import tech.egglink.projects.linkbot.command.cmd.CommandLogout
 
 class Commands {
     private val commands = arrayListOf<CommandHandler>()
+
     /**
      * 注册一个命令
      * @param command 命令处理器
@@ -53,7 +57,7 @@ class Commands {
             when (foundCommand.entry.type) {
                 CommandType.Console -> {
                     if (sender is ConsoleCommandSender) {
-                        if (sender.hasPermission(foundCommand.entry.permission)) {  // 检查权限
+                        if (sender.hasPermission(foundCommand.entry.permission)) { // 检查权限
                             // 检查参数
                             foundCommand.entry.argsType.let {
                                 if (args.size != it.size) {
@@ -83,7 +87,7 @@ class Commands {
                                             return CommandResult.ERROR
                                         }
                                     }
-                                }  // 参数类型检查
+                                } // 参数类型检查
                                 return foundCommand.execute(sender, args)
                             }
                         } else {
@@ -95,7 +99,7 @@ class Commands {
                 }
                 CommandType.Bot -> {
                     if (sender is BotCommandSender) {
-                        if (sender.hasPermission(foundCommand.entry.permission)) {  // 检查权限
+                        if (sender.hasPermission(foundCommand.entry.permission)) { // 检查权限
                             // 检查参数
                             foundCommand.entry.argsType.let {
                                 if (args.size != it.size) {
@@ -125,7 +129,7 @@ class Commands {
                                             return CommandResult.ERROR
                                         }
                                     }
-                                }  // 参数类型检查结束
+                                } // 参数类型检查结束
                                 return foundCommand.execute(sender, args)
                             }
                         } else {

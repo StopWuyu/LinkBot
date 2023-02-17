@@ -21,7 +21,7 @@ fun Project.configureLicensee() = this.configure<app.cash.licensee.LicenseeExten
         "BSD-3-Clause",
         "CC0-1.0",
         "EPL-1.0",
-        "GPL-2.0-with-classpath-exception",
+        "GPL-2.0-with-classpath-exception"
     )
     allowedLicenses.forEach { allow(it) }
     ignoreDependencies("org.postgresql", "postgresql") {
@@ -32,12 +32,25 @@ fun Project.configureLicensee() = this.configure<app.cash.licensee.LicenseeExten
 dependencies {
     // Libraries
     implementation(libs.stdlib)
-    implementation(libs.reflect)
+//    implementation(libs.reflect)
     implementation(libs.gson)
     implementation(libs.kolor)
     implementation(libs.jline)
     implementation(libs.jansi)
     implementation(libs.mirai.core)
+
+    implementation(libs.slf4j.api)
+    implementation(libs.logback.classic)
+
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.kotlin.datetime)
+
+    implementation(libs.sqlite)
+    implementation(libs.postgresql)
+
+    implementation(libs.hikaricp)
 }
 
 tasks.test {
@@ -45,12 +58,14 @@ tasks.test {
 }
 
 repositories {
+    maven(url = "https://plugins.gradle.org/m2/")
     maven(url = "https://maven.aliyun.com/repository/public")
     mavenCentral()
 }
 
 allprojects {
     repositories {
+        maven(url = "https://plugins.gradle.org/m2/")
         maven(url = "https://maven.aliyun.com/repository/public")
         mavenCentral()
     }

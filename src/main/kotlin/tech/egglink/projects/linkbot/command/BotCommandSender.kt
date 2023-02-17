@@ -1,6 +1,6 @@
 package tech.egglink.projects.linkbot.command
 
-class BotCommandSender: CommandSender {
+class BotCommandSender : CommandSender {
     override suspend fun sendMessage(message: String) {
         // TODO
     }

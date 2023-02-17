@@ -41,7 +41,7 @@ class Message {
     class Info {
         val helpTextTitle = "==========帮助=========="
         val helpTextTemplate = "名称: %s\n别名: %s\n用法: %s\n描述: %s\n\n"
-        val helpTextEnd =  "=======第 %d/%d 页======="
+        val helpTextEnd = "=======第 %d/%d 页======="
         val helpPageOutOfIndex = "页码超出范围!"
     }
     val info = Info()
@@ -57,7 +57,9 @@ class Message {
         val loadingBot: String = "正在加载机器人..."
         val loadingCommand: String = "正在加载命令..."
         val startSuccess: String = "LinkBot 启动成功!"
+        val doneBotLogin: String = "机器人登录成功!"
         val interrupted: String = "再次按下 Ctrl-C 退出程序."
+        val exit: String = "正在退出程序..."
     }
     val other = Other()
 }

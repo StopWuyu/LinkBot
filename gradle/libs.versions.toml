@@ -1,13 +1,13 @@
 [versions]
-kotlin = "1.8.0"
+kotlin = "1.8.10"
 ktor = "2.1.2"
 exposed = "0.41.1"
 
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "10.3.0" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "11.2.0" }
 abi-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version = "0.12.1" }
-spotless = { id = "com.diffplug.spotless", version = "6.12.1" }
+spotless = { id = "com.diffplug.spotless", version = "6.15.0" }
 licensee = { id = "app.cash.licensee", version = "1.6.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "7.1.0" }
 
@@ -19,3 +19,16 @@ kolor = { group = "com.andreapivetta.kolor", name = "kolor", version = "1.0.0"}
 mirai-core = { group = "net.mamoe", name = "mirai-core", version = "2.14.0" }
 jline = { group = "org.jline", name = "jline", version = "3.20.0" }
 jansi = { group = "org.fusesource.jansi", name = "jansi", version = "2.4.0" }
+
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version = "2.0.6" }
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.4.5" }
+
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
+
+sqlite = "org.xerial:sqlite-jdbc:3.40.1.0"
+postgresql = "org.postgresql:postgresql:42.5.4"
+
+hikaricp = "com.zaxxer:HikariCP:5.0.1"

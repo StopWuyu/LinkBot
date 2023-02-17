@@ -15,14 +15,16 @@ import tech.egglink.projects.linkbot.utils.Utils
  *
  * 参数: 无
  * */
-class CommandLogin: CommandHandler(Entry().apply {
-    name = "login"
-    usage = Utils.message.command.loginUsage
-    description = Utils.message.command.loginDescription
-}) {
+class CommandLogin : CommandHandler(
+    Entry().apply {
+        name = "login"
+        usage = Utils.message.command.loginUsage
+        description = Utils.message.command.loginDescription
+    }
+) {
     override suspend fun execute(sender: CommandSender, args: Array<String>): CommandResult {
         try {
-            Utils.bot.login(Utils.config.botAccount, Utils.config.botPassword)
+            Utils.bot.login(Utils.config.account.id, Utils.config.account.password)
         } catch (e: Exception) {
             return CommandResult.ERROR
         }

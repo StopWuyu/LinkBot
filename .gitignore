@@ -2,3 +2,10 @@
 /.gradle/
 /build/
 /build/classes/kotlin/main/
+/config.json
+/LinkBot-1.0.0.jar
+/data/
+/device.json
+/plugins/
+/cache/
+/logs/

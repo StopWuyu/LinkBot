@@ -12,7 +12,10 @@ class Bot {
 
     /**
      * 机器人登录
-     * */
+     *
+     * @param account QQ 号
+     * @param password 密码
+     */
     fun login(account: Long, password: String) {
         bot = Mirai.BotFactory.newBot(
             account,

@@ -1,3 +1,6 @@
+@file:Suppress("unused")
+
+// 用于忽略未使用的警告 暂时性
 package tech.egglink.projects.linkbot.utils.configurations
 
 import com.google.gson.GsonBuilder
@@ -31,6 +34,7 @@ class Configuration {
      */
     class Bot {
         val autoLogin = true // 自动登录
+        val commandPrefix = listOf("/", "!") // 命令前缀
         val autoAcceptFriendRequest = true // 自动接受好友请求
         val autoAcceptGroupInvite = false // 自动接受群邀请
         val workGroups: List<Long> = listOf() // 工作群
@@ -40,14 +44,13 @@ class Configuration {
     val bot = Bot()
 
     /**
-     * 数据库信息
+     * 权限信息
      */
-    class Database {
-        val fileName = "database.db"
-        val user = "root"
-        val password = "123456"
+    class Permission {
+        val defaultTrue = listOf("true")
+        val defaultFalse = listOf<String>()
     }
-    val database = Database()
+    val permission = Permission()
 
     /**
      * 路径信息

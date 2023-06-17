@@ -9,8 +9,11 @@ import org.jline.terminal.Terminal
 import org.jline.terminal.TerminalBuilder
 import tech.egglink.projects.linkbot.command.CommandResult
 import tech.egglink.projects.linkbot.command.ConsoleCommandSender
+import tech.egglink.projects.linkbot.event.EventListener
+import tech.egglink.projects.linkbot.event.evts.EventGroupMessage
 import tech.egglink.projects.linkbot.utils.Utils
-import tech.egglink.projects.linkbot.utils.Utils.cmd
+import tech.egglink.projects.linkbot.utils.Utils.botCmd
+import tech.egglink.projects.linkbot.utils.Utils.consoleCmd
 import tech.egglink.projects.linkbot.utils.Utils.logger
 import java.io.File
 
@@ -22,6 +25,7 @@ object LinkBot {
         Runtime.getRuntime().addShutdownHook(
             Thread {
                 logger.info(Utils.message.other.exit)
+                Utils.bot.logout()
             }
         )
     }
@@ -41,14 +45,19 @@ object LinkBot {
         File(Utils.config.path.data).mkdirs()
         File(Utils.config.path.plugins).mkdirs()
         logger.info(Utils.message.other.loadingConfig)
-        logger.info(Utils.message.other.loadingDatabase)
-        Utils.database.loadDatabase() // 加载数据库
+        logger.info(Utils.message.other.loadingData)
         if (Utils.config.bot.autoLogin) {
             logger.info(Utils.message.other.loadingBot)
             Utils.bot.login(Utils.config.account.id, Utils.config.account.password) // 登录机器人
         }
+        logger.info(Utils.message.other.loadingEvents)
+        EventListener.beginListen() // 开始监听事件
+        Utils.event.registerEvents(
+            EventGroupMessage()
+        ) // 注册所有事件
         logger.info(Utils.message.other.loadingCommand)
-        cmd.registerCommands() // 注册所有命令
+        consoleCmd.registerCommands() // 注册所有命令
+        botCmd.registerBotCommands() // 注册所有机器人命令
         var terminal: Terminal? = null // 终端
         try {
             terminal = TerminalBuilder.builder().jna(true).build()
@@ -69,13 +78,15 @@ object LinkBot {
                     if (args.size > 1) {
                         val name = args[0]
                         var argCmd = arrayOf<String>()
+                        var skip = true
                         args.forEach {
-                            if (it != name) {
+                            if (!skip) {
                                 argCmd = argCmd.plus(it)
                             }
+                            skip = false
                         }
                         runBlocking {
-                            when (cmd.runCommand(name, ConsoleCommandSender(), argCmd)) {
+                            when (consoleCmd.runCommand(name, ConsoleCommandSender(), argCmd)) {
                                 CommandResult.NOT_FOUND -> logger.error(Utils.message.error.unknownCommand)
                                 CommandResult.NO_PERMISSION -> logger.error(Utils.message.error.noPermission)
                                 CommandResult.SUCCESS -> {
@@ -92,7 +103,7 @@ object LinkBot {
                     } else {
                         val name = args[0]
                         runBlocking {
-                            when (cmd.runCommand(name, ConsoleCommandSender(), arrayOf())) {
+                            when (consoleCmd.runCommand(name, ConsoleCommandSender(), arrayOf())) {
                                 CommandResult.NOT_FOUND -> logger.error(Utils.message.error.unknownCommand)
                                 CommandResult.NO_PERMISSION -> logger.error(Utils.message.error.noPermission)
                                 CommandResult.SUCCESS -> {

@@ -62,7 +62,7 @@
             <!-- keep 30 days' worth of history -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
-        <encoder charset="UTF-8">
+        <encoder charset="GBK">
             <pattern>${filePattern}</pattern>
         </encoder>
     </appender>
@@ -72,6 +72,8 @@
         <appender-ref ref="CONSOLE_INFO" />
         <appender-ref ref="CONSOLE_WARN" />
         <appender-ref ref="CONSOLE_ERROR" />
+    </root>
+    <root level="DEBUG">
         <appender-ref ref="CUSTOM" />
     </root>
 </configuration>

@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory
 
 class Logger {
     private val logger = LoggerFactory.getLogger("LinkBot")!!
+
     /**
      * 信息输出
      *

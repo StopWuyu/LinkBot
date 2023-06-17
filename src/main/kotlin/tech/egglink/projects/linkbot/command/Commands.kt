@@ -1,9 +1,11 @@
 package tech.egglink.projects.linkbot.command
 
-import tech.egglink.projects.linkbot.command.cmd.CommandExit
-import tech.egglink.projects.linkbot.command.cmd.CommandHelp
-import tech.egglink.projects.linkbot.command.cmd.CommandLogin
-import tech.egglink.projects.linkbot.command.cmd.CommandLogout
+import tech.egglink.projects.linkbot.command.cmd.console.CommandExit
+import tech.egglink.projects.linkbot.command.cmd.console.CommandHelp
+import tech.egglink.projects.linkbot.command.cmd.console.CommandLogin
+import tech.egglink.projects.linkbot.command.cmd.console.CommandLogout
+import tech.egglink.projects.linkbot.event.EventType
+import tech.egglink.projects.linkbot.utils.Utils
 
 class Commands {
     private val commands = arrayListOf<CommandHandler>()
@@ -24,6 +26,10 @@ class Commands {
         registerCommand(CommandHelp())
         registerCommand(CommandLogin())
         registerCommand(CommandLogout())
+    }
+
+    fun registerBotCommands() {
+        registerCommand(tech.egglink.projects.linkbot.command.cmd.bot.CommandHelp())
     }
 
     /**
@@ -57,6 +63,7 @@ class Commands {
             when (foundCommand.entry.type) {
                 CommandType.Console -> {
                     if (sender is ConsoleCommandSender) {
+                        Utils.event.broadcastEvent(EventType.CONSOLE_COMMAND) // 广播事件
                         if (sender.hasPermission(foundCommand.entry.permission)) { // 检查权限
                             // 检查参数
                             foundCommand.entry.argsType.let {
@@ -94,11 +101,12 @@ class Commands {
                             return CommandResult.NO_PERMISSION
                         }
                     } else {
-                        return CommandResult.FAILURE
+                        return CommandResult.NOT_FOUND
                     }
                 }
                 CommandType.Bot -> {
                     if (sender is BotCommandSender) {
+                        Utils.event.broadcastEvent(EventType.BOT_COMMAND) // 广播事件
                         if (sender.hasPermission(foundCommand.entry.permission)) { // 检查权限
                             // 检查参数
                             foundCommand.entry.argsType.let {
@@ -136,7 +144,7 @@ class Commands {
                             return CommandResult.NO_PERMISSION
                         }
                     } else {
-                        return CommandResult.FAILURE
+                        return CommandResult.NOT_FOUND
                     }
                 }
             }

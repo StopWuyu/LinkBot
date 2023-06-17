@@ -4,6 +4,7 @@ import kotlinx.coroutines.runBlocking
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.Mirai
 import net.mamoe.mirai.utils.BotConfiguration
+import tech.egglink.projects.linkbot.event.EventType
 import tech.egglink.projects.linkbot.utils.Utils
 
 class Bot {
@@ -24,6 +25,7 @@ class Bot {
         )
         runBlocking {
             bot!!.login()
+            Utils.event.broadcastEvent(EventType.BOT_LOGIN)
             Utils.logger.info(Utils.message.other.doneBotLogin)
         }
     }
@@ -34,6 +36,7 @@ class Bot {
     fun logout() {
         runBlocking {
             bot!!.close()
+            Utils.event.broadcastEvent(EventType.BOT_LOGOUT)
         }
     }
 

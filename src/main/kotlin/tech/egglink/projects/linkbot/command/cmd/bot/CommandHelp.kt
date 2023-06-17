@@ -1,12 +1,12 @@
-package tech.egglink.projects.linkbot.command.cmd
+package tech.egglink.projects.linkbot.command.cmd.bot
 
+import tech.egglink.projects.linkbot.command.BotCommandSender
 import tech.egglink.projects.linkbot.command.CommandHandler
 import tech.egglink.projects.linkbot.command.CommandResult
 import tech.egglink.projects.linkbot.command.CommandSender
 import tech.egglink.projects.linkbot.command.CommandType
-import tech.egglink.projects.linkbot.command.ConsoleCommandSender
 import tech.egglink.projects.linkbot.utils.Utils
-import tech.egglink.projects.linkbot.utils.Utils.cmd
+import tech.egglink.projects.linkbot.utils.Utils.botCmd
 import kotlin.math.ceil
 
 /**
@@ -14,7 +14,7 @@ import kotlin.math.ceil
  *
  * 功能: 显示帮助信息
  *
- * 作用于: [ConsoleCommandSender]
+ * 作用于: [BotCommandSender]
  *
  * 参数: [[Int]] = 1
  * */
@@ -26,11 +26,12 @@ class CommandHelp : CommandHandler(
         description = Utils.message.command.helpDescription
         argsType = listOf("Int")
         defaultArgs = arrayOf("1")
+        type = CommandType.Bot
     }
 ) {
     override suspend fun execute(sender: CommandSender, args: Array<String>): CommandResult {
         val page = args[0].toInt()
-        val commands = cmd.getCommands()
+        val commands = botCmd.getCommands()
         val maxPage = ceil(commands.size.toDouble() / Utils.config.setting.helpCountEachPage.toDouble())
         if (page > maxPage) {
             // 页码超出范围
@@ -48,7 +49,7 @@ class CommandHelp : CommandHandler(
             if (i >= commands.size) {
                 break
             }
-            if (commands[i].entry.type != CommandType.Console) {
+            if (commands[i].entry.type != CommandType.Bot) {
                 // 仅显示控制台命令
                 continue
             }

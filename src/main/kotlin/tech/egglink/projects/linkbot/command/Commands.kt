@@ -28,6 +28,9 @@ class Commands {
         registerCommand(CommandLogout())
     }
 
+    /**
+     * 注册所有机器人命令
+     * */
     fun registerBotCommands() {
         registerCommand(tech.egglink.projects.linkbot.command.cmd.bot.CommandHelp())
     }

@@ -21,8 +21,6 @@ class Message {
         val loginDescription = "登录机器人."
         val logoutUsage = "logout"
         val logoutDescription = "登出机器人."
-        val databaseUsage = "database find <qq>"
-        val databaseDescription = "查看数据库."
     }
     val command = Command()
 
@@ -34,7 +32,6 @@ class Message {
         val unknownCommand = "未知命令!"
         val noPermission = "没有权限!"
         val invalidArgs = "参数错误!"
-        val databaseNotFound = "数据库中未找到!"
     }
     val error = Error()
 

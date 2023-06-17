@@ -12,6 +12,9 @@ import net.mamoe.mirai.event.events.GroupNameChangeEvent
 import net.mamoe.mirai.event.events.MemberJoinRequestEvent
 import tech.egglink.projects.linkbot.utils.Utils
 
+/**
+ * 事件监听器
+ * */
 object EventListener {
     fun beginListen() {
         Utils.bot.getBot().eventChannel.subscribeAlways<BotEvent> {

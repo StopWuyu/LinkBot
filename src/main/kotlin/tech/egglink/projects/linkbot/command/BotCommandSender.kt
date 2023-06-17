@@ -3,6 +3,9 @@ package tech.egglink.projects.linkbot.command
 import net.mamoe.mirai.contact.Contact
 import net.mamoe.mirai.contact.Group
 
+/**
+ * 用于 Bot 的 CommandSender
+ * */
 interface BotCommandSender : CommandSender {
     val sender: Contact
     val group: Group

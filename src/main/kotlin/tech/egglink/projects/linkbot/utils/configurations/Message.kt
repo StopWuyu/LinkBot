@@ -14,13 +14,17 @@ class Message {
      * */
     class Command {
         val exitUsage = "exit"
-        val exitDescription = "退出程序."
+        val exitDescription = "退出程序。"
         val helpUsage = "help <page>"
-        val helpDescription = "显示帮助信息."
+        val helpDescription = "显示帮助信息。"
         val loginUsage = "login"
-        val loginDescription = "登录机器人."
+        val loginDescription = "登录机器人。"
         val logoutUsage = "logout"
-        val logoutDescription = "登出机器人."
+        val logoutDescription = "登出机器人。"
+        val captchaUsage = "captcha <pic/slider> <text/ticket>"
+        val captchaDescription = "输入验证码。"
+        val databaseUsage = "database <qq>"
+        val databaseDescription = "查询指定QQ号的用户信息。"
     }
     val command = Command()
 
@@ -32,6 +36,9 @@ class Message {
         val unknownCommand = "未知命令!"
         val noPermission = "没有权限!"
         val invalidArgs = "参数错误!"
+        val notLogin = "你还没有登录!"
+        val isOnline = "你已经登录了!"
+        val notFoundUser = "没有找到指定用户!"
     }
     val error = Error()
 
@@ -43,7 +50,7 @@ class Message {
         val helpTextTemplate = "名称: %s\n别名: %s\n用法: %s\n描述: %s\n\n"
         val helpTextEnd = "=======第 %d/%d 页======="
         val helpPageOutOfIndex = "页码超出范围!"
-        val database = "查询数据: \nQQ: %d\n权限-true: %s\n权限-false: %s"
+        val database = "查询数据: \nQQ: %d\n权限-true: %s"
     }
     val info = Info()
 
@@ -60,8 +67,12 @@ class Message {
         val loadingEvents: String = "正在加载事件..."
         val loadingCommand: String = "正在加载命令..."
         val startSuccess: String = "LinkBot 启动成功!"
-        val interrupted: String = "再次按下 Ctrl-C 退出程序."
+        val interrupted: String = "再次按下 Ctrl-C 退出程序。"
         val exit: String = "正在退出程序..."
+        val picCaptchaSaved: String = "验证码已保存至 %s"
+        val picCaptchaInput: String = "请输入 captcha pic <text> 来输入验证码。"
+        val sliderCaptchaUrl: String = "滑块验证码地址: %s"
+        val sliderCaptchaInput: String = "请输入 captcha slider <ticket> 来确认校验验证码完成。"
     }
     val other = Other()
 }

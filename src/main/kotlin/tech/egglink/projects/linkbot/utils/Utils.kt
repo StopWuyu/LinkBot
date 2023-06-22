@@ -3,6 +3,7 @@ package tech.egglink.projects.linkbot.utils
 import com.google.gson.GsonBuilder
 import tech.egglink.projects.linkbot.bot.Bot
 import tech.egglink.projects.linkbot.command.Commands
+import tech.egglink.projects.linkbot.dataprovider.DataProvider
 import tech.egglink.projects.linkbot.event.EventManager
 import tech.egglink.projects.linkbot.utils.configurations.Configuration
 import tech.egglink.projects.linkbot.utils.configurations.Message
@@ -18,6 +19,28 @@ object Utils {
     val botCmd = Commands()
     val bot = Bot()
     val event = EventManager()
+    val database by lazy {
+        DataProvider(getFilePath(config.path.data, "data.db"))
+    }
+
+    /**
+     * 将多个路径加在一起
+     *
+     * @return 返回的路径最后不带 \
+     * */
+    fun getFilePath(vararg path: String): String {
+        val result = StringBuilder()
+        path.forEach {
+            result.append(
+                when (it.last()) {
+                    '\\' -> it
+                    '/' -> it.removeSuffix("/") + "\\"
+                    else -> it + "\\"
+                }
+            )
+        }
+        return result.removeSuffix("\\").toString()
+    }
 
     /**
      * 获取当前时间

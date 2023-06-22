@@ -46,6 +46,7 @@ object LinkBot {
         File(Utils.config.path.plugins).mkdirs()
         logger.info(Utils.message.other.loadingConfig)
         logger.info(Utils.message.other.loadingData)
+        Utils.database
         if (Utils.config.bot.autoLogin) {
             logger.info(Utils.message.other.loadingBot)
             Utils.bot.login(Utils.config.account.id, Utils.config.account.password) // 登录机器人

@@ -1,11 +1,14 @@
 package tech.egglink.projects.linkbot.command
 
+import tech.egglink.projects.linkbot.command.cmd.bot.CommandDatabase
+import tech.egglink.projects.linkbot.command.cmd.console.CommandCaptcha
 import tech.egglink.projects.linkbot.command.cmd.console.CommandExit
 import tech.egglink.projects.linkbot.command.cmd.console.CommandHelp
 import tech.egglink.projects.linkbot.command.cmd.console.CommandLogin
 import tech.egglink.projects.linkbot.command.cmd.console.CommandLogout
 import tech.egglink.projects.linkbot.event.EventType
 import tech.egglink.projects.linkbot.utils.Utils
+import tech.egglink.projects.linkbot.command.cmd.bot.CommandHelp as BotCommandHelp
 
 class Commands {
     private val commands = arrayListOf<CommandHandler>()
@@ -26,13 +29,15 @@ class Commands {
         registerCommand(CommandHelp())
         registerCommand(CommandLogin())
         registerCommand(CommandLogout())
+        registerCommand(CommandCaptcha())
     }
 
     /**
      * 注册所有机器人命令
      * */
     fun registerBotCommands() {
-        registerCommand(tech.egglink.projects.linkbot.command.cmd.bot.CommandHelp())
+        registerCommand(BotCommandHelp())
+        registerCommand(CommandDatabase())
     }
 
     /**
@@ -63,95 +68,45 @@ class Commands {
             // args若为空则使用默认参数
             val args = if (arg.isEmpty()) foundCommand.entry.defaultArgs else arg
             // 命令Type
-            when (foundCommand.entry.type) {
-                CommandType.Console -> {
-                    if (sender is ConsoleCommandSender) {
-                        Utils.event.broadcastEvent(EventType.CONSOLE_COMMAND) // 广播事件
-                        if (sender.hasPermission(foundCommand.entry.permission)) { // 检查权限
-                            // 检查参数
-                            foundCommand.entry.argsType.let {
-                                if (args.size != it.size) {
+            Utils.event.broadcastEvent(EventType.BOT_COMMAND) // 广播事件
+            if (sender.hasPermission(foundCommand.entry.permission)) { // 检查权限
+                // 检查参数
+                foundCommand.entry.argsType.let {
+                    if (args.size != it.size) {
+                        return CommandResult.INVALID_USAGE
+                    }
+                    for (i in it.indices) {
+                        when (it[i]) {
+                            "String" -> {
+                                // 任何参数都可以
+                            }
+                            "Int" -> {
+                                if (!args[i].matches(Regex("[0-9]+"))) {
                                     return CommandResult.INVALID_USAGE
                                 }
-                                for (i in it.indices) {
-                                    when (it[i]) {
-                                        "String" -> {
-                                            // 任何参数都可以
-                                        }
-                                        "Int" -> {
-                                            if (!args[i].matches(Regex("[0-9]+"))) {
-                                                return CommandResult.INVALID_USAGE
-                                            }
-                                        }
-                                        "Double" -> {
-                                            if (!args[i].matches(Regex("[0-9]+\\.[0-9]+"))) {
-                                                return CommandResult.INVALID_USAGE
-                                            }
-                                        }
-                                        "Boolean" -> {
-                                            if (args[i] != "true" && args[i] != "false") {
-                                                return CommandResult.INVALID_USAGE
-                                            }
-                                        }
-                                        else -> {
-                                            return CommandResult.ERROR
-                                        }
-                                    }
-                                } // 参数类型检查
-                                return foundCommand.execute(sender, args)
                             }
-                        } else {
-                            return CommandResult.NO_PERMISSION
-                        }
-                    } else {
-                        return CommandResult.NOT_FOUND
-                    }
-                }
-                CommandType.Bot -> {
-                    if (sender is BotCommandSender) {
-                        Utils.event.broadcastEvent(EventType.BOT_COMMAND) // 广播事件
-                        if (sender.hasPermission(foundCommand.entry.permission)) { // 检查权限
-                            // 检查参数
-                            foundCommand.entry.argsType.let {
-                                if (args.size != it.size) {
+                            "Double" -> {
+                                if (!args[i].matches(Regex("[0-9]+\\.[0-9]+"))) {
                                     return CommandResult.INVALID_USAGE
                                 }
-                                for (i in it.indices) {
-                                    when (it[i]) {
-                                        "String" -> {
-                                            // 任何参数都可以
-                                        }
-                                        "Int" -> {
-                                            if (!args[i].matches(Regex("[0-9]+"))) {
-                                                return CommandResult.INVALID_USAGE
-                                            }
-                                        }
-                                        "Double" -> {
-                                            if (!args[i].matches(Regex("[0-9]+\\.[0-9]+"))) {
-                                                return CommandResult.INVALID_USAGE
-                                            }
-                                        }
-                                        "Boolean" -> {
-                                            if (args[i] != "true" && args[i] != "false") {
-                                                return CommandResult.INVALID_USAGE
-                                            }
-                                        }
-                                        else -> {
-                                            return CommandResult.ERROR
-                                        }
-                                    }
-                                } // 参数类型检查结束
-                                return foundCommand.execute(sender, args)
                             }
-                        } else {
-                            return CommandResult.NO_PERMISSION
+                            "Boolean" -> {
+                                if (args[i] != "true" && args[i] != "false") {
+                                    return CommandResult.INVALID_USAGE
+                                }
+                            }
+                            else -> {
+                                return CommandResult.ERROR
+                            }
                         }
-                    } else {
-                        return CommandResult.NOT_FOUND
-                    }
+                    } // 参数类型检查结束
+                    return foundCommand.execute(sender, args)
                 }
+            } else {
+                return CommandResult.NO_PERMISSION
             }
         }
+
         return CommandResult.NOT_FOUND
     }
 }

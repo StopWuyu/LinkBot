@@ -48,7 +48,6 @@ class Configuration {
      */
     class Permission {
         val defaultTrue = listOf("true")
-        val defaultFalse = listOf<String>()
     }
     val permission = Permission()
 

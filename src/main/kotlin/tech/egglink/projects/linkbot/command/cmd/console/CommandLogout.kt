@@ -24,7 +24,11 @@ class CommandLogout : CommandHandler(
 ) {
     override suspend fun execute(sender: CommandSender, args: Array<String>): CommandResult {
         try {
-            Utils.bot.logout()
+            if (Utils.bot.getBot()?.isOnline == true) {
+                Utils.bot.logout()
+            } else {
+                sender.sendMessage(Utils.message.error.notLogin)
+            }
         } catch (e: Exception) {
             return CommandResult.ERROR
         }

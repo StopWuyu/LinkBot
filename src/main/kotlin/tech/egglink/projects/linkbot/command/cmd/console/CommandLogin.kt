@@ -24,7 +24,11 @@ class CommandLogin : CommandHandler(
 ) {
     override suspend fun execute(sender: CommandSender, args: Array<String>): CommandResult {
         try {
-            Utils.bot.login(Utils.config.account.id, Utils.config.account.password)
+            if (Utils.bot.getBot() == null || Utils.bot.getBot()?.isOnline == false) {
+                Utils.bot.login(Utils.config.account.id, Utils.config.account.password)
+            } else {
+                sender.sendMessage(Utils.message.error.isOnline)
+            }
         } catch (e: Exception) {
             return CommandResult.ERROR
         }

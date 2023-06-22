@@ -17,7 +17,7 @@ import tech.egglink.projects.linkbot.utils.Utils
  * */
 object EventListener {
     fun beginListen() {
-        Utils.bot.getBot().eventChannel.subscribeAlways<BotEvent> {
+        Utils.bot.getBot()?.eventChannel?.subscribeAlways<BotEvent> {
             when (this) {
                 is GroupMessageEvent -> Utils.event.broadcastEvent(EventType.BOT_GROUP_RECEIVE_MESSAGE, this) // 机器人接收到群消息
                 is GroupMuteAllEvent -> Utils.event.broadcastEvent(EventType.BOT_GROUP_MUTE_ALL, this) // 机器人群全员禁言

@@ -1,8 +1,10 @@
 package tech.egglink.projects.linkbot.event.evts
 
 import kotlinx.coroutines.runBlocking
+import net.mamoe.mirai.event.events.GroupMessageEvent
 import tech.egglink.projects.linkbot.command.BotCommandSender
 import tech.egglink.projects.linkbot.command.CommandResult
+import tech.egglink.projects.linkbot.dataprovider.UserData
 import tech.egglink.projects.linkbot.event.Event
 import tech.egglink.projects.linkbot.event.EventType
 import tech.egglink.projects.linkbot.utils.Utils
@@ -16,9 +18,17 @@ import net.mamoe.mirai.event.Event as nEvent
  * */
 class EventGroupMessage : Event {
     override fun execute(event: nEvent) {
-        event as net.mamoe.mirai.event.events.GroupMessageEvent // 转换为 GroupMessageEvent
+        event as GroupMessageEvent // 转换为 GroupMessageEvent
         try {
             // 数据操作
+            if (Utils.database.getUserDataByQQId(event.sender.id) == null) {
+                Utils.database.insertUserData(
+                    UserData().apply {
+                        qqId = event.sender.id
+                        permissionTrue = Utils.config.permission.defaultTrue.toTypedArray()
+                    }
+                )
+            }
         } catch (e: Exception) {
             Utils.logger.error(Utils.message.error.unknownError)
             e.printStackTrace()
@@ -38,8 +48,8 @@ class EventGroupMessage : Event {
         Utils.logger.debug("群消息: ${event.group.id}(${event.group.name}) - ${event.sender.id}(${event.sender.nick}) - $text")
         val args = clear.split(" ")
         val name = args[0]
-        var argCmd = arrayOf<String>()
         var skip = true
+        var argCmd = arrayOf<String>()
         args.forEach {
             if (!skip) {
                 argCmd = argCmd.plus(it)
@@ -50,10 +60,14 @@ class EventGroupMessage : Event {
             when (
                 Utils.botCmd.runCommand(
                     name,
-                    object : BotCommandSender {
+                    object : BotCommandSender { // 匿名类
                         override val sender = event.sender
                         override val group = event.group
                         override val sendToGroup = true
+
+                        override fun hasPermission(permission: String): Boolean { // 调用数据库判断
+                            return Utils.database.getUserDataByQQId(event.sender.id)?.permissionTrue?.contains(permission) ?: false
+                        }
                     },
                     argCmd
                 )

@@ -1,5 +1,8 @@
 package tech.egglink.projects.linkbot.bot
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.Mirai
@@ -24,9 +27,11 @@ class Bot {
                 noBotLog()
                 noNetworkLog()
                 fileBasedDeviceInfo()
+                loginSolver = BotLoginSolver()
+                protocol = BotConfiguration.MiraiProtocol.IPAD
             }
         )
-        runBlocking {
+        CoroutineScope(Dispatchers.IO).launch {
             bot!!.login()
             Utils.event.broadcastEvent(EventType.BOT_LOGIN)
             Utils.logger.info(Utils.message.other.doneBotLogin)
@@ -40,13 +45,14 @@ class Bot {
         runBlocking {
             bot!!.close()
             Utils.event.broadcastEvent(EventType.BOT_LOGOUT)
+            bot = null
         }
     }
 
     /**
      * 获取机器人实例
      * */
-    fun getBot(): Bot {
-        return bot ?: throw NullPointerException("机器人未登录")
+    fun getBot(): Bot? {
+        return bot
     }
 }

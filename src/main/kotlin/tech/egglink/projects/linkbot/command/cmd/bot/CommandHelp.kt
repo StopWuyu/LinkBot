@@ -4,7 +4,6 @@ import tech.egglink.projects.linkbot.command.BotCommandSender
 import tech.egglink.projects.linkbot.command.CommandHandler
 import tech.egglink.projects.linkbot.command.CommandResult
 import tech.egglink.projects.linkbot.command.CommandSender
-import tech.egglink.projects.linkbot.command.CommandType
 import tech.egglink.projects.linkbot.utils.Utils
 import tech.egglink.projects.linkbot.utils.Utils.botCmd
 import kotlin.math.ceil
@@ -26,32 +25,22 @@ class CommandHelp : CommandHandler(
         description = Utils.message.command.helpDescription
         argsType = listOf("Int")
         defaultArgs = arrayOf("1")
-        type = CommandType.Bot
     }
 ) {
     override suspend fun execute(sender: CommandSender, args: Array<String>): CommandResult {
         val page = args[0].toInt()
         val commands = botCmd.getCommands()
         val maxPage = ceil(commands.size.toDouble() / Utils.config.setting.helpCountEachPage.toDouble())
-        if (page > maxPage) {
-            // 页码超出范围
-            sender.sendMessage(Utils.message.info.helpPageOutOfIndex)
-            return CommandResult.FAILURE
-        }
-        if (page < 1) {
+        if (page > maxPage || page < 1) {
             // 页码超出范围
             sender.sendMessage(Utils.message.info.helpPageOutOfIndex)
             return CommandResult.FAILURE
         }
         val message = StringBuilder()
-        message.append("\n" + Utils.message.info.helpTextTitle + "\n")
+        message.append(Utils.message.info.helpTextTitle + "\n")
         for (i in (page - 1) * Utils.config.setting.helpCountEachPage until page * Utils.config.setting.helpCountEachPage) {
             if (i >= commands.size) {
                 break
-            }
-            if (commands[i].entry.type != CommandType.Bot) {
-                // 仅显示控制台命令
-                continue
             }
             message.append(
                 Utils.message.info.helpTextTemplate.format(

@@ -3,7 +3,6 @@ package tech.egglink.projects.linkbot.command.cmd.console
 import tech.egglink.projects.linkbot.command.CommandHandler
 import tech.egglink.projects.linkbot.command.CommandResult
 import tech.egglink.projects.linkbot.command.CommandSender
-import tech.egglink.projects.linkbot.command.CommandType
 import tech.egglink.projects.linkbot.command.ConsoleCommandSender
 import tech.egglink.projects.linkbot.utils.Utils
 import tech.egglink.projects.linkbot.utils.Utils.consoleCmd
@@ -47,10 +46,6 @@ class CommandHelp : CommandHandler(
         for (i in (page - 1) * Utils.config.setting.helpCountEachPage until page * Utils.config.setting.helpCountEachPage) {
             if (i >= commands.size) {
                 break
-            }
-            if (commands[i].entry.type != CommandType.Console) {
-                // 仅显示控制台命令
-                continue
             }
             message.append(
                 Utils.message.info.helpTextTemplate.format(

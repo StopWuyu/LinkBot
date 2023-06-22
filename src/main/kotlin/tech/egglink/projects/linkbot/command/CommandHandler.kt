@@ -14,7 +14,6 @@ abstract class CommandHandler(val entry: Entry) {
      * @property description 命令描述
      * @property usage 命令用法
      * @property aliases 命令别名
-     * @property type 命令类型
      * @property argsType 参数类型
      * @property defaultArgs 默认参数
      * @property permission 权限
@@ -24,7 +23,6 @@ abstract class CommandHandler(val entry: Entry) {
         var description: String = ""
         var usage: String = ""
         var aliases: Array<String> = arrayOf()
-        var type: CommandType = CommandType.Console
 
         /**
          * 参数类型

@@ -59,9 +59,13 @@ class Message {
      * */
     class Other {
         val startInfo: String = "正在启动 LinkBot..."
-        val loadingData: String = "正在加载数据..."
         val loadingConfig: String = "正在加载配置文件..."
+        val loadingData: String = "正在加载数据..."
         val loadingPlugin: String = "正在加载插件..."
+        val noPlugin: String = "没有找到插件。"
+        val foundPlugin: String = "加载插件: %s - %s"  // 名称 - 版本
+        val pluginException: String = "%s 插件发生了错误！"
+        val pluginApiLow: String = "%s 插件API版本与当前不符合！"
         val loadingBot: String = "正在加载机器人..."
         val doneBotLogin: String = "机器人登录成功!"
         val loadingEvents: String = "正在加载事件..."

@@ -2,8 +2,8 @@ package tech.egglink.projects.linkbot.utils.logger
 
 import org.slf4j.LoggerFactory
 
-class Logger {
-    private val logger = LoggerFactory.getLogger("LinkBot")!!
+class Logger(loggerName: String = "LinkBot") {
+    private val logger = LoggerFactory.getLogger(loggerName)!!
 
     /**
      * 信息输出
@@ -33,6 +33,18 @@ class Logger {
      * */
     fun error(message: String) {
         logger.error(message)
+    }
+
+    /**
+     * 信息输出
+     *
+     * 信息等级: ERROR
+     * @param message 输出信息
+     * @param e 异常信息
+     * */
+    fun error(message: String, e: Exception) {
+        error(message)
+        error(e.stackTraceToString())
     }
 
     /**

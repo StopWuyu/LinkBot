@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tech.egglink.projects.linkbot.utils
 
 import com.google.gson.GsonBuilder
@@ -5,6 +7,7 @@ import tech.egglink.projects.linkbot.bot.Bot
 import tech.egglink.projects.linkbot.command.Commands
 import tech.egglink.projects.linkbot.dataprovider.DataProvider
 import tech.egglink.projects.linkbot.event.EventManager
+import tech.egglink.projects.linkbot.plugins.PluginManager
 import tech.egglink.projects.linkbot.utils.configurations.Configuration
 import tech.egglink.projects.linkbot.utils.configurations.Message
 import tech.egglink.projects.linkbot.utils.logger.Logger
@@ -14,6 +17,7 @@ import java.util.*
 object Utils {
     const val version = "1.0.0" // 版本号
     const val tunnel = "BETA" // 通道
+    const val apiVersion = "5"  // API版本
 
     val consoleCmd = Commands()
     val botCmd = Commands()
@@ -21,6 +25,9 @@ object Utils {
     val event = EventManager()
     val database by lazy {
         DataProvider(getFilePath(config.path.data, "data.db"))
+    }
+    val pluginManager by lazy {
+        PluginManager()
     }
 
     /**
